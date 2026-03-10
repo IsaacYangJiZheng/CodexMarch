@@ -30,17 +30,6 @@ const generateRoutes = (structure) => {
   }
 
   if (authorizedStructure) {
-    console.log(
-      '[ROUTES] building with permissions:',
-      userRole?.permission?.length,
-      userRole?.permission,
-    );
-    if (authorizedStructure?.routes) {
-      const otpRoute = authorizedStructure.routes.find(
-        (route) => route.path === '/members/otp-testing',
-      );
-      console.log('[ROUTES] otpRoute:', otpRoute);
-    }
     dynamicRoutes.push(
       ...routesGenerator(
         isAuthenticated,
