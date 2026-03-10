@@ -1,0 +1,51 @@
+const mongoose = require("mongoose");
+const staffSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  staffCode: { type: String, required: true, unique: true },
+  gender: { type: String, required: true },
+  profileImageUrl: { type: String },
+  profileImageData: { type: String },
+  all_branch: { type: Boolean, default: false },
+  branch: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Branch",
+      required: true,
+    },
+  ],
+  roles: { type: mongoose.Schema.Types.ObjectId, ref: "roles", required: true },
+  joinDate: { type: Date, required: true },
+  userName: { type: String, required: true, unique: true },
+  loginKey: { type: String, required: true },
+  statusActive: { type: Boolean, required: true },
+  emailAddress: { type: String },
+  positionDepartment: { type: String },
+  fullName: { type: String },
+  nirc: { type: String },
+  religion: { type: String },
+  mobileNumber: { type: String },
+  martialStatus: { type: String },
+  currentAddress: { type: String },
+  bankName: { type: String },
+  bankAccountNumber: { type: String },
+  bankEPFNo: { type: String },
+  bankSOCSONo: { type: String },
+  bankIncomeTaxNo: { type: String },
+  emergencyContactName: { type: String },
+  emergencyRelation: { type: String },
+  emergencyContact: { type: String },
+  withdrawDate: { type: Date },
+  otherReason: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  allowOT: { type: Boolean, default: false },
+  allowOTDate: { type: Date, default: Date.now },
+  isDeleted: { type: Boolean, default: false },
+  isInToday: { type: Boolean, default: false },
+  isOutToday: { type: Boolean, default: false },
+  isMigrated: { type: Boolean, default: false },
+  migratedDate: { type: Date },
+});
+
+const Staff = mongoose.model("Staff", staffSchema);
+
+module.exports = Staff;

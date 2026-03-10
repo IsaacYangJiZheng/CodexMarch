@@ -1,0 +1,25 @@
+import React from 'react';
+import {NavLink} from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+const AppNavLink = React.forwardRef(
+  ({activeClassName, className, exact, ...rest}, ref) => {
+    return (
+      <NavLink
+        ref={ref}
+        {...rest}
+        end={exact}
+        className={({isActive}) =>
+          isActive ? `${activeClassName} ${className}` : className
+        }
+      />
+    );
+  },
+);
+
+export default AppNavLink;
+AppNavLink.propTypes = {
+  activeClassName: PropTypes.any,
+  className: PropTypes.any,
+  exact: PropTypes.bool,
+}; 

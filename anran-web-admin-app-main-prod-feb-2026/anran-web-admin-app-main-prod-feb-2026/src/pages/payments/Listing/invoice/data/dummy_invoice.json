@@ -1,0 +1,44 @@
+{
+  "invoiceNumber": "INV-1001",
+  "invoiceDate": "2024-10-16",
+  "branch": "Anran Wellness KL",
+  "customerId": "CUST-001",
+  "salesConsultant": "John Doe",
+  "branchCompanyName": "ANRAN WELLNESS KL BRANCH",
+  "branchAddress": "123 Wellness St, Kuala Lumpur, Malaysia",
+  "branchContact": "03-1234 5678",
+  "paymentMethod": "Credit Card",
+  "customerName": "Jane Smith",
+  "customerAddress": "456 Health Ave, Penang, Malaysia",
+  "items": [
+    {
+      "itemNumber": "001",
+      "description": "Wellness Package 1",
+      "quantity": 2,
+      "unitPrice": 150,
+      "discount": "10%",
+      "price": 270
+    },
+    {
+      "itemNumber": "001",
+      "description": "Wellness Package 1",
+      "quantity": 2,
+      "unitPrice": 150,
+      "discount": "10%",
+      "price": 270
+    },
+    {
+      "itemNumber": "001",
+      "description": "Wellness Package 1",
+      "quantity": 2,
+      "unitPrice": 150,
+      "discount": "10%",
+      "price": 270
+    }
+  ],
+  "subtotal": 420,
+  "taxRate": "6%",
+  "salesTax": 25.2,
+  "depositReceived": 100,
+  "total": 345.2
+}

@@ -1,0 +1,110 @@
+import React from 'react';
+import {Dialog, DialogTitle, Slide} from '@mui/material';
+import PropTypes from 'prop-types';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import AppScrollbar from '../AppScrollbar';
+import {Fonts} from 'shared/constants/AppEnums';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction='up' ref={ref} {...props} />;
+});
+
+const AppDialog = ({
+  sxStyle,
+  maxWidth,
+  hideClose,
+  open,
+  onClose,
+  children,
+  dividers,
+  title,
+  actionTitle,
+  fullHeight,
+}) => {
+  return (
+    <Dialog
+      sx={{
+        '& .MuiDialog-paper': {
+          width: '100%',
+        },
+        '& .MuiDialogContent-root': {
+          overflowY: 'hidden',
+          paddingLeft: 0,
+          paddingRight: 0,
+        },
+        '& .MuiDialogActions-root': {
+          justifyContent: 'center',
+        },
+        ...sxStyle,
+      }}
+      maxWidth={maxWidth}
+      TransitionComponent={Transition}
+      open={open}
+      onClose={onClose}
+    >
+      <DialogTitle
+        sx={{
+          fontSize: 14,
+          fontWeight: Fonts.MEDIUM,
+          padding: 0, // added
+        }}
+        id='app-dialog-title'
+      >
+        {title}
+        {hideClose ? null : (
+          <IconButton
+            aria-label='close'
+            sx={{
+              position: 'absolute',
+              right: 4,
+              top: 4,
+              color: 'grey.500',
+            }}
+            onClick={onClose}
+            size='large'
+          >
+            <CloseIcon />
+          </IconButton>
+        )}
+      </DialogTitle>
+      <DialogContent dividers={dividers}>
+        <AppScrollbar
+          sx={{
+            paddingTop: 1,
+            height: fullHeight ? '80vh' : '100%',
+            minHeight: '100px',
+            maxHeight: '600px',
+            paddingRight: 6,
+            paddingLeft: 6,
+          }}
+        >
+          {children}
+        </AppScrollbar>
+      </DialogContent>
+      {actionTitle ? <DialogActions>{actionTitle}</DialogActions> : null}
+    </Dialog>
+  );
+};
+export default AppDialog;
+
+AppDialog.propTypes = {
+  maxWidth: PropTypes.string,
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  children: PropTypes.node,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  dividers: PropTypes.bool,
+  hideClose: PropTypes.bool,
+  fullHeight: PropTypes.bool,
+  actionTitle: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  sxStyle: PropTypes.object,
+};
+AppDialog.defaultProps = {
+  dividers: false,
+  fullHeight: false,
+  maxWidth: 'sm',
+  hideClose: false,
+};

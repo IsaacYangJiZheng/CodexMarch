@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "web-admin-uat-app",
+      "script": "npx",
+      "interpreter": "none",
+      "args": "serve build -p 3000 -T"
+    }
+  ]
+}

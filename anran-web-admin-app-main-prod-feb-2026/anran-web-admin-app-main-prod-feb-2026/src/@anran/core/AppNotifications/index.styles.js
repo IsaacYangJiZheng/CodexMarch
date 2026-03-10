@@ -1,0 +1,58 @@
+import {alpha} from '@mui/material';
+import {Fonts} from 'shared/constants/AppEnums';
+
+import {styled} from '@mui/material/styles';
+import ListItem from '@mui/material/ListItem';
+
+export const NotificationItemWrapper = styled(ListItem)((props) => {
+  console.log('NotificationItemWrapper', props);
+
+  return {
+    fontWeight: props.mail.isRead ? Fonts.REGULAR : Fonts.MEDIUM,
+    display: 'flex',
+    backgroundColor: props.mail.isRead
+      ? props.theme.palette.background.paper
+      : alpha(props.theme.palette.background.default, 0.8),
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    borderBottom: `1px solid ${props.theme.palette.divider}`,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    cursor: 'pointer',
+    position: 'relative',
+    overflow: 'hidden',
+    [props.theme.breakpoints.up('sm')]: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    [props.theme.breakpoints.up('xl')]: {
+      paddingTop: 6,
+      paddingBottom: 6,
+    },
+    '&:hover': {
+      backgroundColor: '#e6e7e8',
+      '& .main-action-wrapper': {
+        opacity: 1,
+        visibility: 'visible',
+        right: 0,
+      },
+      '& .mail-time': {
+        opacity: 0,
+        visibility: 'hidden',
+      },
+      '& .mail-info-content': {
+        width: 'calc(100% - 170px)',
+      },
+    },
+    '&.active': {
+      backgroundColor: alpha(props.theme.palette.primary.main, 0.1),
+      boxShadow: `0 3px 5px 0 ${alpha(props.theme.palette.common.black, 0.08)}`,
+    },
+    '& .avatar': {
+      width: 36,
+      height: 36,
+    },
+  };
+});

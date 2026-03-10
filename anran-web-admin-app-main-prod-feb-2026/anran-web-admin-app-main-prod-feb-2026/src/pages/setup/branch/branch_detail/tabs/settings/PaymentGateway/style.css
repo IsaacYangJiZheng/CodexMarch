@@ -1,0 +1,21 @@
+.icon-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-icon-container {
+  display: flex;
+  align-items: center;
+}
+
+.image {
+  width: 70%;
+  /* width: 46px; */
+  /* height: 50px; */
+  margin-bottom: 10px;
+}
+
+.span {
+  margin-left: 10px;
+}
