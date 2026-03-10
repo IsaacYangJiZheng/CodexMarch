@@ -397,9 +397,35 @@ const ReportTable = () => {
   ]);
 
 
-const handleExportExcelSQLFormat = useCallback(() => {
+const handleExportExcelSQLFormat = useCallback(async () => {
   try {
-    const orders = safeArray(filteredData);
+    if (
+      !Array.isArray(selectedBranch) ||
+      selectedBranch.length === 0 ||
+      !selectedStartDate ||
+      !selectedEndDate
+    ) {
+      return;
+    }
+
+    const payload = {
+      selectedBranch,
+      selectedStartDate: dayjs(selectedStartDate).format('YYYY-MM-DD'),
+      selectedEndDate: dayjs(selectedEndDate).format('YYYY-MM-DD'),
+      includeItemsForExport: true,
+    };
+
+    const response = await postDataApi(
+      'api/report2/finance-report',
+      infoViewActionsContext,
+      payload,
+      false,
+      false,
+      { 'Content-Type': 'application/json' }
+    );
+
+    const orders =
+      Array.isArray(response?.data) ? response.data : Array.isArray(response) ? response : [];
     if (orders.length === 0) return;
 
     const fileName = `SalesSQLReport${dayjs().format('YYYYMMDD_HHmmss')}`;
@@ -412,35 +438,67 @@ const handleExportExcelSQLFormat = useCallback(() => {
         .toString()
         .toUpperCase();
 
-      // You don't have items here, so we export 1 row per order
-      exportData.push({
-        DocDate: docDate,
-        'DocNo(20)': data?.orderNumber || '',
-        'Code(10)': data?.branch?.customerCode || '',
-        'CompanyName(100)': memberName,
-        'ADDRESS1(60)': data?.member?.address || '',
-        'ADDRESS2(60)': data?.member?.states || '',
-        'ADDRESS3(60)': '',
-        'ADDRESS4(60)': '',
-        'POSTCODE(10)': data?.member?.postcode || '',
-        'CITY(50)': data?.member?.city || '',
-        'STATE(50)': data?.member?.states || '',
-        'COUNTRY(2)': 'MY',
-        'PHONE1(200)': data?.member?.mobileNumber || '',
-        'Description_HDR(200)': 'SALES',
-        'CC(200)': 'Post from 3rd Party App/System',
-        SEQ: 0, // fill later
-        'ACCOUNT(10)': data?.branch?.accountCode || '',
-        // No line items available on this page:
-        'ItemCode(30)': '',
-        'Description_DTL(200)': '',
-        Qty: 1, // or 0 if you prefer
-        'UOM(10)': 'UNIT',
-        UnitPrice: Number(data?.orderTotalNetAmount ?? 0),
-        'Tax(10)': '', // you can map your tax code if you have one at order level
-        TaxAmt: Number(data?.orderTotalTaxAmount ?? 0),
-        'Net Amount': Number(data?.orderTotalNetAmount ?? 0),
-      });
+      const items = Array.isArray(data?.items) ? data.items : [];
+
+      if (items.length === 0) {
+        exportData.push({
+          DocDate: docDate,
+          'DocNo(20)': data?.orderNumber || '',
+          'Code(10)': data?.branch?.customerCode || '',
+          'CompanyName(100)': memberName,
+          'ADDRESS1(60)': data?.member?.address || '',
+          'ADDRESS2(60)': data?.member?.states || '',
+          'ADDRESS3(60)': '',
+          'ADDRESS4(60)': '',
+          'POSTCODE(10)': data?.member?.postcode || '',
+          'CITY(50)': data?.member?.city || '',
+          'STATE(50)': data?.member?.states || '',
+          'COUNTRY(2)': 'MY',
+          'PHONE1(200)': data?.member?.mobileNumber || '',
+          'Description_HDR(200)': 'SALES',
+          'CC(200)': 'Post from 3rd Party App/System',
+          SEQ: 0,
+          'ACCOUNT(10)': data?.branch?.accountCode || '',
+          'ItemCode(30)': '',
+          'Description_DTL(200)': '',
+          Qty: 0,
+          'UOM(10)': 'UNIT',
+          UnitPrice: 0,
+          'Tax(10)': '',
+          TaxAmt: 0,
+          'Net Amount': 0,
+        });
+      } else {
+        items.forEach((item) => {
+          exportData.push({
+            DocDate: docDate,
+            'DocNo(20)': data?.orderNumber || '',
+            'Code(10)': data?.branch?.customerCode || '',
+            'CompanyName(100)': memberName,
+            'ADDRESS1(60)': data?.member?.address || '',
+            'ADDRESS2(60)': data?.member?.states || '',
+            'ADDRESS3(60)': '',
+            'ADDRESS4(60)': '',
+            'POSTCODE(10)': data?.member?.postcode || '',
+            'CITY(50)': data?.member?.city || '',
+            'STATE(50)': data?.member?.states || '',
+            'COUNTRY(2)': 'MY',
+            'PHONE1(200)': data?.member?.mobileNumber || '',
+            'Description_HDR(200)': 'SALES',
+            'CC(200)': 'Post from 3rd Party App/System',
+            SEQ: 0,
+            'ACCOUNT(10)': data?.branch?.accountCode || '',
+            'ItemCode(30)': item?.itemCode || '',
+            'Description_DTL(200)': item?.itemName || '',
+            Qty: Number(item?.quantity ?? 0),
+            'UOM(10)': 'UNIT',
+            UnitPrice: Number(item?.unitPrice ?? 0),
+            'Tax(10)': item?.taxCode || '',
+            TaxAmt: Number(item?.taxAmount ?? 0),
+            'Net Amount': Number(item?.netAmount ?? 0),
+          });
+        });
+      }
     });
 
     // Sort to assign SEQ deterministically
@@ -469,7 +527,13 @@ const handleExportExcelSQLFormat = useCallback(() => {
       ),
     );
   }
-}, [filteredData, formatMessage, infoViewActionsContext]);
+}, [
+  selectedBranch,
+  selectedStartDate,
+  selectedEndDate,
+  formatMessage,
+  infoViewActionsContext,
+]);
 
 
   /** ---- Autocomplete handlers (transitioned to keep UI responsive) ---- */
